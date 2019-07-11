@@ -39,6 +39,7 @@ const ModalContent = styled.div`
     border-radius: 4px;
     max-width: 80%;
     max-height: 80%;
+    position: relative;
     z-index: 1;
 
     @media screen and (max-width: ${props => props.theme.breakpoints.sm}) {
@@ -83,3 +84,40 @@ const Modal = ({ onRequestClose, allowEscape = true, children }) => {
 };
 
 export default Modal;
+
+const ModalCloseIcon = styled.a`
+    position: absolute;
+    right: 0;
+    top: -42px;
+    width: 32px;
+    height: 32px;
+    opacity: 0.6;
+
+    &:hover {
+        opacity: 1;
+    }
+
+    &:before,
+    &:after {
+        position: absolute;
+        left: 15px;
+        content: " ";
+        height: 33px;
+        width: 2px;
+        background-color: #333;
+    }
+
+    &:before {
+        transform: rotate(45deg);
+    }
+    &:after {
+        transform: rotate(-45deg);
+    }
+
+    @media screen and (max-width: ${props => props.theme.breakpoints.sm}) {
+        top: 10px;
+        right: 10px;
+    }
+`;
+
+export const ModalClose = ({ onClick }) => <ModalCloseIcon onClick={() => onClick("close")} />;

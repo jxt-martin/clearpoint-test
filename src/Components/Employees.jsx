@@ -8,8 +8,7 @@ import EmployeeCard from "./EmployeeCard";
 
 // Data/context/etc
 import { EmployeeData } from "~data/Context";
-import Modal from "../Partial/Modal";
-// import EmployeeDetails from "./EmployeeDetails";
+import Modal, { ModalClose } from "~partial/Modal";
 
 const EmployeeDetailsLazy = React.lazy(() => import("./EmployeeDetails"));
 
@@ -18,8 +17,8 @@ const TempLoading = () => <div>Loading...</div>;
 // Styled
 const EmployeeList = styled.section`
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(16em, 1fr));
-    grid-gap: 10px;
+    grid-template-columns: repeat(auto-fill, minmax(18em, 1fr));
+    grid-gap: 20px;
 `;
 
 function Employees() {
@@ -27,16 +26,17 @@ function Employees() {
     const [employeeDetailsIsOpen, setEmployeeDetailsIsOpen] = useState(false);
     const [selectedEmployeeId, setSelectedEmployeeId] = useState(null);
 
+    const handleRequestClose = method => {
+        console.log(method); // Useful for Analytics and Tracking purposes
+        setEmployeeDetailsIsOpen(false);
+        setSelectedEmployeeId(null);
+    };
+
     return (
         <Frame>
             {employeeDetailsIsOpen && (
-                <Modal
-                    onRequestClose={method => {
-                        console.log(method); // Useful for Analytics and Tracking purposes
-                        setEmployeeDetailsIsOpen(false);
-                        setSelectedEmployeeId(null);
-                    }}
-                >
+                <Modal onRequestClose={handleRequestClose}>
+                    <ModalClose onClick={handleRequestClose} />
                     <React.Suspense fallback={<TempLoading />}>
                         <EmployeeDetailsLazy employeeId={selectedEmployeeId} />
                     </React.Suspense>
@@ -51,8 +51,8 @@ function Employees() {
                     <EmployeeCard
                         key={emp.id}
                         employee={emp}
-                        onClick={e => {
-                            console.log(e);
+                        active={emp.id === selectedEmployeeId}
+                        onClick={() => {
                             setEmployeeDetailsIsOpen(true);
                             setSelectedEmployeeId(emp.id);
                         }}
